@@ -10,8 +10,10 @@ from .backbone import (
     Backbone,
     ResNet,
     ResNetBlockBase,
+    VGG16,
     build_backbone,
     build_resnet_backbone,
+    build_vgg16_backbone,
     make_stage,
 )
 from .meta_arch import (

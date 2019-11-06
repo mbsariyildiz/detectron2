@@ -1,0 +1,37 @@
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN"
+  BACKBONE:
+    NAME: build_vgg16_backbone
+    FREEZE_AT: 1
+  RPN:
+    IN_FEATURES: ["features"]
+    PRE_NMS_TOPK_TEST: 6000
+    POST_NMS_TOPK_TEST: 1000
+  ROI_HEADS:
+    NAME: "StandardROIHeads"
+    IN_FEATURES: ["features"]
+    NUM_CLASSES: 20
+  ROI_BOX_HEAD:
+    NAME: FastRCNNConvFCHead
+    NUM_CONV: 2
+    CONV_DIM: 512
+    NORM: "BN"
+    POOLER_RESOLUTION: 1
+  PIXEL_MEAN: [123.675,116.28,103.53]
+  PIXEL_STD: [58.395,57.12,57.375]
+  WEIGHTS: ""
+  MASK_ON: False
+  KEYPOINT_ON: False
+DATASETS:
+  TRAIN: ('voc_2007_trainval',)
+  TEST: ('voc_2007_test',)
+SOLVER:
+  IMS_PER_BATCH: 2
+  BASE_LR: 0.02
+  STEPS: (12000, 16000)
+  MAX_ITER: 18000  # 17.4 epochs
+  WARMUP_ITERS: 100
+INPUT:
+  MIN_SIZE_TRAIN: (480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800)
+  MIN_SIZE_TEST: 800
+SEED: 36

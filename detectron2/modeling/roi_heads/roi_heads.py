@@ -145,6 +145,7 @@ class ROIHeads(torch.nn.Module):
         self.smooth_l1_beta           = cfg.MODEL.ROI_BOX_HEAD.SMOOTH_L1_BETA
         # fmt: on
 
+
         # Matcher to assign box proposals to gt boxes
         self.proposal_matcher = Matcher(
             cfg.MODEL.ROI_HEADS.IOU_THRESHOLDS,
@@ -325,6 +326,7 @@ class Res5ROIHeads(ROIHeads):
         self.mask_on      = cfg.MODEL.MASK_ON
         # fmt: on
         assert not cfg.MODEL.KEYPOINT_ON
+
 
         self.pooler = ROIPooler(
             output_size=pooler_resolution,
