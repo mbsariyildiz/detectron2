@@ -207,7 +207,8 @@ def register_all_pascal_voc(root="datasets"):
 
 
 # Register them all under "./datasets"
+datasets_root = os.environ.get("DATASETS_HOME", "datasets")
 register_all_coco()
 register_all_lvis()
 register_all_cityscapes()
-register_all_pascal_voc()
+register_all_pascal_voc(datasets_root)

@@ -123,6 +123,10 @@ _C.MODEL.BACKBONE = CN()
 _C.MODEL.BACKBONE.NAME = "build_resnet_backbone"
 # Add StopGrad at a specified stage so the bottom layers are frozen
 _C.MODEL.BACKBONE.FREEZE_AT = 2
+# Denotes if a backbone has sobel filters in its first layer.
+_C.MODEL.BACKBONE.SOBEL = False
+# Freeze the backbone batchnorm layers, options: True or False
+_C.MODEL.BACKBONE.FREEZE_BN = True
 
 
 # ---------------------------------------------------------------------------- #

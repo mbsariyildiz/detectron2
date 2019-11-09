@@ -95,15 +95,18 @@ def build_vgg16_backbone(cfg, input_shape):
     Returns:
         VGG16: a :class:`VGG16` instance.
     """
-    sobel = False # cfg.MODEL.SOBEL
+    sobel = cfg.MODEL.BACKBONE.SOBEL
     bn = True
     dim = 2 + int(not sobel)
     model = VGG16(make_layers(dim, bn), sobel)
+    
+    freeze_bn = cfg.MODEL.BACKBONE.FREEZE_BN
+    if freeze_bn:
+        model = FrozenBatchNorm2d.convert_frozen_batchnorm(model)
 
     freeze = cfg.MODEL.BACKBONE.FREEZE_AT > 0
     if freeze:
         for p in model.parameters():
             p.requires_grad = False
-        model = FrozenBatchNorm2d.convert_frozen_batchnorm(model)
     return model
 
