@@ -1,7 +1,7 @@
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
   BACKBONE:
-    NAME: build_vgg16_backbone
+    NAME: build_alexnet_backbone
     FREEZE_AT: 1
     FREEZE_BN: True
   RPN:
@@ -14,7 +14,7 @@ MODEL:
     NUM_CLASSES: 20
   ROI_BOX_HEAD:
     NAME: FastRCNNConvFCHead
-    NUM_CONV: 4
+    NUM_CONV: 2
     CONV_DIM: 512
     NUM_FC: 0
     FC_DIM: 512
@@ -26,13 +26,13 @@ MODEL:
   MASK_ON: False
   KEYPOINT_ON: False
 DATASETS:
-  TRAIN: ('voc_2007_trainval', 'voc_2012_trainval',)
+  TRAIN: ('voc_2007_trainval',)
   TEST: ('voc_2007_test',)
 SOLVER:
   IMS_PER_BATCH: 4
   BASE_LR: 0.002
-  STEPS: (80000,)
-  MAX_ITER: 100000
+  STEPS: (40000,)
+  MAX_ITER: 50000
   WARMUP_ITERS: 1000
   WEIGHT_DECAY: 0.0005
 INPUT:
