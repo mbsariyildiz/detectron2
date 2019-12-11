@@ -73,7 +73,7 @@ class VGG16(Backbone):
 def make_layers(input_dim, batch_norm):
     layers = []
     in_channels = input_dim
-    cfg = [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512, 'M', 512, 512, 512] # removed the last max-pooling layer , 'M'
+    cfg = [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512, 'M', 512, 512, 512, "M"] 
     for v in cfg:
         if v == 'M':
             layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
@@ -96,7 +96,7 @@ def build_vgg16_backbone(cfg, input_shape):
         VGG16: a :class:`VGG16` instance.
     """
     sobel = cfg.MODEL.BACKBONE.SOBEL
-    bn = True
+    bn = cfg.MODEL.BACKBONE.BN
     dim = 2 + int(not sobel)
     model = VGG16(make_layers(dim, bn), sobel)
     
