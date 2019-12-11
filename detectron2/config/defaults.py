@@ -129,6 +129,13 @@ _C.MODEL.BACKBONE.FREEZE_AT = 2
 _C.MODEL.BACKBONE.SOBEL = False
 # Freeze the backbone batchnorm layers, options: True or False
 _C.MODEL.BACKBONE.FREEZE_BN = True
+# Whether to use batch-norm in backbones.
+# This config is applicable only to AlexNet and VGG16.
+_C.MODEL.BACKBONE.BN = True
+# Key of the config dictionary that defines the architecture structure.
+# Only applicable to AlexNet or VGG16.
+# Can be ("caron", "pytorch")
+_C.MODEL.BACKBONE.ARCH_CFG = ""
 
 
 # ---------------------------------------------------------------------------- #
