@@ -17,16 +17,18 @@ __all__ = [ 'AlexNet', 'build_alexnet_backbone']
 
 
 # (number of filters, kernel size, stride, pad)
-CFG = {
-    '2012': [(96, 11, 4, 2), 'M', (256, 5, 1, 2), 'M', (384, 3, 1, 1), (384, 3, 1, 1), (256, 3, 1, 1)] # removed the last max-pooling layer , 'M'
+ARCH_CFG = {
+    'caron': [(96, 11, 4, 2), 'M', (256, 5, 1, 2), 'M', (384, 3, 1, 1), (384, 3, 1, 1), (256, 3, 1, 1)],  # We removed the last max-pool from config, see the forward function.
+    'pytorch': [(64, 11, 4, 2), 'M', (192, 5, 1, 2), 'M', (384, 3, 1, 1), (256, 3, 1, 1), (256, 3, 1, 1)]  # We removed the last max-pool from config, see the forward function.
 }
 
-class AlexNet(nn.Module):
-    def __init__(self, features, num_classes, sobel):
+class AlexNet(Backbone):
+
+    def __init__(self, features, sobel):
         super(AlexNet, self).__init__()
         self.features = features
         self._out_features = ["features"]
-        self._out_feature_strides = {"features": 16}
+        self._out_feature_strides = {"features": 32}
         self._out_feature_channels = {"features": 256}
 
         self._initialize_weights()
@@ -50,9 +52,13 @@ class AlexNet(nn.Module):
             self.sobel = None
 
     def forward(self, x):
+        image_size = x.size(2)
         if self.sobel:
             x = self.sobel(x)
         x = self.features(x)
+        # we apply adaptive max pooling to fix the stride of AlexNet to 32.
+        out_size = image_size // self._out_feature_strides["features"]
+        x = nn.functional.adaptive_max_pool2d(x, (out_size, out_size))
         return { "features": x }
 
     def output_shape(self):
@@ -73,6 +79,7 @@ class AlexNet(nn.Module):
                 nn.init.constant_(m.weight, 1)
                 if m.bias is not None:
                     nn.init.constant_(m.bias, 0)
+
 
 def make_layers_features(cfg, input_dim, bn):
     layers = []
@@ -98,13 +105,14 @@ def build_alexnet_backbone(cfg, input_shape):
     Returns:
         VGG16: a :class:`VGG16` instance.
     """
+    arch_cfg = cfg.MODEL.BACKBONE.ARCH_CFG
     sobel = cfg.MODEL.BACKBONE.SOBEL
-    bn = True
+    bn = cfg.MODEL.BACKBONE.BN
     dim = 2 + int(not sobel)
-    model = AlexNet(make_layers_features(cfg["2012"], dim, bn), sobel)
-    
+    model = AlexNet(make_layers_features(ARCH_CFG[arch_cfg], dim, bn), sobel)
+
     freeze_bn = cfg.MODEL.BACKBONE.FREEZE_BN
-    if freeze_bn:
+    if freeze_bn and bn:
         model = FrozenBatchNorm2d.convert_frozen_batchnorm(model)
 
     freeze = cfg.MODEL.BACKBONE.FREEZE_AT > 0
