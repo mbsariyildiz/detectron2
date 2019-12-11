@@ -5,5 +5,6 @@ from .backbone import Backbone
 from .fpn import FPN
 from .resnet import ResNet, ResNetBlockBase, build_resnet_backbone, make_stage
 from .vgg16 import VGG16, build_vgg16_backbone
+from .alexnet import build_alexnet_backbone
 
 # TODO can expose more resnet blocks after careful consideration
