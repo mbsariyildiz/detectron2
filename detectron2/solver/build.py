@@ -15,8 +15,12 @@ def build_optimizer(cfg: CfgNode, model: torch.nn.Module) -> torch.optim.Optimiz
     for key, value in model.named_parameters():
         if not value.requires_grad:
             continue
+
         lr = cfg.SOLVER.BASE_LR
+        if key.startswith("backbone"):
+            lr = cfg.SOLVER.BASE_LR_BACKBONE
         weight_decay = cfg.SOLVER.WEIGHT_DECAY
+
         if key.endswith("norm.weight") or key.endswith("norm.bias"):
             weight_decay = cfg.SOLVER.WEIGHT_DECAY_NORM
         elif key.endswith(".bias"):
@@ -24,7 +28,7 @@ def build_optimizer(cfg: CfgNode, model: torch.nn.Module) -> torch.optim.Optimiz
             # and WEIGHT_DECAY_BIAS to WEIGHT_DECAY so that bias optimizer
             # hyperparameters are by default exactly the same as for regular
             # weights.
-            lr = cfg.SOLVER.BASE_LR * cfg.SOLVER.BIAS_LR_FACTOR
+            lr = lr * cfg.SOLVER.BIAS_LR_FACTOR
             weight_decay = cfg.SOLVER.WEIGHT_DECAY_BIAS
         params += [{"params": [value], "lr": lr, "weight_decay": weight_decay}]
 

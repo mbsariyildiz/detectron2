@@ -493,8 +493,10 @@ _C.SOLVER = CN()
 _C.SOLVER.LR_SCHEDULER_NAME = "WarmupMultiStepLR"
 
 _C.SOLVER.MAX_ITER = 40000
-
+# Default base learning rate for all parameters
 _C.SOLVER.BASE_LR = 0.001
+# (optinal) Base learning rate for backbone parameters
+_C.SOLVER.BASE_LR_BACKBONE = 0.001
 
 _C.SOLVER.MOMENTUM = 0.9
 
